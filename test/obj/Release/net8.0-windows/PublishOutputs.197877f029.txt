@@ -1,9 +1,0 @@
-G:\Vpet\VPet\VPet-Simulator.Windows\bin\x64\Release\net8.0-windows\mod\9004_AutoBuy++\plugin\AutoBuy.dll
-G:\Vpet\VPet\VPet-Simulator.Windows\bin\x64\Release\net8.0-windows\mod\9004_AutoBuy++\plugin\AutoBuy.deps.json
-G:\Vpet\VPet\VPet-Simulator.Windows\bin\x64\Release\net8.0-windows\mod\9004_AutoBuy++\plugin\AutoBuy.pdb
-G:\Vpet\VPet\VPet-Simulator.Windows\bin\x64\Release\net8.0-windows\mod\9004_AutoBuy++\plugin\LinePutScript.dll
-G:\Vpet\VPet\VPet-Simulator.Windows\bin\x64\Release\net8.0-windows\mod\9004_AutoBuy++\plugin\LinePutScript.Localization.WPF.dll
-G:\Vpet\VPet\VPet-Simulator.Windows\bin\x64\Release\net8.0-windows\mod\9004_AutoBuy++\plugin\Panuon.WPF.dll
-G:\Vpet\VPet\VPet-Simulator.Windows\bin\x64\Release\net8.0-windows\mod\9004_AutoBuy++\plugin\Panuon.WPF.UI.dll
-G:\Vpet\VPet\VPet-Simulator.Windows\bin\x64\Release\net8.0-windows\mod\9004_AutoBuy++\plugin\VPet-Simulator.Core.dll
-G:\Vpet\VPet\VPet-Simulator.Windows\bin\x64\Release\net8.0-windows\mod\9004_AutoBuy++\plugin\VPet-Simulator.Windows.Interface.dll
