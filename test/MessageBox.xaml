@@ -1,0 +1,25 @@
+﻿<Window x:Class="VPET.Evian.Check_In.MessageBox" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPET.Evian.Check_In"
+        mc:Ignorable="d" xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Title="{ll:Str 今日任务}"
+        FontSize="16" WindowState="Normal" SizeToContent="Height"
+        Background="{DynamicResource PrimaryLighter}" Closed="Window_Closed" HorizontalAlignment="Center" VerticalAlignment="Center" Height="180" Width="250">
+    <Window.Resources>
+        <ResourceDictionary Source="/VPet-Simulator.Windows.Interface;component/ResourceStyle.xaml" />
+    </Window.Resources>
+
+    <Grid Background="{DynamicResource PrimaryLighter}" Width="230" Height="150" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="95.32" />
+        </Grid.RowDefinitions>
+        <TextBlock HorizontalAlignment="Left" Margin="10,75,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.363,0.437"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" x:Name="Content" Text="{ll:Str 启用}" VerticalAlignment="Top" Grid.RowSpan="1" Grid.ColumnSpan="1" Margin="10,10,0,0"/>
+    </Grid>
+</Window>

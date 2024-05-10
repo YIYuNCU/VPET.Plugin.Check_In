@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "QcYRlkVH1dTBb1M8eRxO5KZ5wSNNaAnmKZc8JzNEuuUBCXwdY19eKqWa4qWwiN/ncW3a1V6+LaWV+9TEdipH+w==",
+  "success": true,
+  "projectFilePath": "G:\\Vpet\\test\\test2\\VPET-Check-In\\test\\Check_In.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\dchxy\\.nuget\\packages\\lineputscript\\1.11.6\\lineputscript.1.11.6.nupkg.sha512",
+    "C:\\Users\\dchxy\\.nuget\\packages\\lineputscript.localization.wpf\\1.0.7\\lineputscript.localization.wpf.1.0.7.nupkg.sha512",
+    "C:\\Users\\dchxy\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\dchxy\\.nuget\\packages\\panuon.wpf\\1.1.0\\panuon.wpf.1.1.0.nupkg.sha512",
+    "C:\\Users\\dchxy\\.nuget\\packages\\panuon.wpf.ui\\1.2.1.2\\panuon.wpf.ui.1.2.1.2.nupkg.sha512",
+    "C:\\Users\\dchxy\\.nuget\\packages\\vpet-simulator.core\\1.1.0.15\\vpet-simulator.core.1.1.0.15.nupkg.sha512",
+    "C:\\Users\\dchxy\\.nuget\\packages\\vpet-simulator.windows.interface\\1.1.0.15\\vpet-simulator.windows.interface.1.1.0.15.nupkg.sha512"
+  ],
+  "logs": []
+}
