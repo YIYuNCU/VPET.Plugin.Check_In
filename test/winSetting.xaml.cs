@@ -7,6 +7,8 @@ using System.Windows;
 using VPet_Simulator.Core;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Panuon.WPF.UI;
+using System.Diagnostics;
+using System.Windows.Shapes;
 
 namespace VPET.Evian.Check_In
 {
@@ -41,5 +43,15 @@ namespace VPET.Evian.Check_In
             Close();
         }
 
+        private void Open_Click(object sender, RoutedEventArgs e)
+        {
+            var path = "";
+            path = vts.LoaddllPath("Check_In") + @"\Resources" + @"\Image";
+            var pathU = path + @"\Unencrypted_State";
+            if (Directory.Exists(pathU))
+            {
+                Process.Start("explorer.exe", pathU);
+            }
+        }
     }
 }

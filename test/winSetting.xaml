@@ -7,15 +7,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPET.Evian.Check_In"
         mc:Ignorable="d" xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Title="{ll:Str Check_In 设置}"
         FontSize="16" ResizeMode="NoResize" WindowState="Normal" SizeToContent="Height"
-        Background="{DynamicResource PrimaryLighter}" Closed="Window_Closed" HorizontalAlignment="Center" VerticalAlignment="Center" Height="150" Width="200">
+        Background="{DynamicResource PrimaryLighter}" Closed="Window_Closed" HorizontalAlignment="Center" VerticalAlignment="Center" Height="167" Width="200">
     <Window.Resources>
         <ResourceDictionary Source="/VPet-Simulator.Windows.Interface;component/ResourceStyle.xaml" />
     </Window.Resources>
 
-    <Grid Margin="8,8,8,16" Background="{DynamicResource PrimaryLighter}" Width="180" Height="120" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid Background="{DynamicResource PrimaryLighter}" Width="180" Height="117" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80" />
-            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="160" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
@@ -28,10 +27,12 @@
          CheckedBackground="{DynamicResource DARKPrimary}" CheckedBorderBrush="{DynamicResource DARKPrimary}"
          Background="Transparent" BoxWidth="35" BoxHeight="18" ToggleSize="14" ToggleShadowColor="{x:Null}"
          ToggleBrush="{DynamicResource DARKPrimaryDark}" 
-         CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Grid.Column="1" Margin="21,0,14,0" />
+         CheckedToggleBrush="{DynamicResource DARKPrimaryText}" Margin="101,0,14,0" />
 
         <Button pu:ButtonHelper.CornerRadius="4" Content="{ll:Str 保存设置}" Background="{DynamicResource SecondaryLight}"
-        BorderBrush="{DynamicResource SecondaryDark}" BorderThickness="2" Grid.Row="1"
-        Grid.ColumnSpan="2" Click="Save_Click" Height="30" VerticalAlignment="Top" Margin="45,14,0,0" HorizontalAlignment="Left" />
+        BorderBrush="{DynamicResource SecondaryDark}" BorderThickness="2" Grid.Row="1" Click="Save_Click" Height="30" VerticalAlignment="Top" Margin="0,5,0,0" HorizontalAlignment="Center" />
+        <Button pu:ButtonHelper.CornerRadius="4" Content="{ll:Str 打开奖励文件夹}" Background="{DynamicResource SecondaryLight}"
+            BorderBrush="{DynamicResource SecondaryDark}" BorderThickness="2" Grid.Row="1" Click="Open_Click" Height="30" VerticalAlignment="Top" Margin="0,40,0,0" HorizontalAlignment="Center" Width="130" />
+
     </Grid>
 </Window>

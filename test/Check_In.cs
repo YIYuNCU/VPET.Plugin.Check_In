@@ -131,13 +131,13 @@ namespace VPET.Evian.Check_In
                 MessageBoxX.Show("请确定图片个数是否为0".Translate(), "警告".Translate(),
                     MessageBoxButton.OK, MessageBoxIcon.Warning, DefaultButton.YesOK, 5);
             }
-            if (MSave["CheckType"].GetString("CheckType") != null)  ///任务类型
+            if (MW.GameSavesData["Task"].GetString("CheckType") != null)  ///任务类型
             {
-                CheckType = MSave["CheckType"][(gint)"CheckType"];
+                CheckType = MW.GameSavesData["Task"][(gint)"CheckType"];
             }
             else
             {
-                MSave["CheckType"][(gint)"CheckType"] = 0;
+                MW.GameSavesData["Task"][(gint)"CheckType"] = 0;
             }
             if (MW.GameSavesData["Task"].GetString("ImageUseNum") != null)  ///表情给予数量
             {
@@ -195,7 +195,7 @@ namespace VPET.Evian.Check_In
             }
             else
             {
-                BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buy_times"]- MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
+                BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buytimes"]- MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
                 MSave["BuyNum"][(gint)"BuyNum"] = MW.GameSavesData.Statistics[(gint)"stat_buytimes"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
             }
             ///确定今日任务
@@ -206,7 +206,7 @@ namespace VPET.Evian.Check_In
             {
                 Random random = new Random(DateTime.Now.Millisecond);
                 CheckType = random.Next(6);
-                MSave["CheckType"][(gint)"CheckType"] = CheckType;
+                MW.GameSavesData["Task"][(gint)"CheckType"] = CheckType;
                 IfShow = false;
                 MSave["IfShow"][(gbol)"IfShow"] = IfShow;
                 IfFinished = false;
@@ -215,7 +215,7 @@ namespace VPET.Evian.Check_In
                 MSave["TBNum"][(gint)"TBNum"] = TBNum;
                 THNum = MW.GameSavesData.Statistics[(gint)"stat_touch_head"];
                 MSave["THNum"][(gint)"THNum"] = THNum;
-                BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buy_times"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
+                BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buytimes"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
                 MSave["BuyNum"][(gint)"BuyNum"] = BuyNum;
             }
             if (MSave["OpenTime"].GetString() != null)    ///上次开启时间
@@ -387,7 +387,7 @@ namespace VPET.Evian.Check_In
                 ///0.工作一次   1.学习一次  2.玩耍一次  3.摸头三次  4.摸身子三次  5.手动购买一个商品
                 Random random = new Random(DateTime.Now.Millisecond);
                 CheckType = random.Next(6);
-                MSave["CheckType"][(gint)"CheckType"] = CheckType;
+                MW.GameSavesData["Task"][(gint)"CheckType"] = CheckType;
                 if (CheckType >= 0 && CheckType < 3)
                 {
                     MW.Main.WorkTimer.E_FinishWork += Worksta;
@@ -450,7 +450,7 @@ namespace VPET.Evian.Check_In
             {
                 case 0: ///工作一次
                     {
-                        if (obj.work.Type == GraphHelper.Work.WorkType.Work)
+                        if (obj.work.Type == GraphHelper.Work.WorkType.Work && obj.spendtime >= 0.9 * obj.work.Time)
                         {
                             GiveBonus();
                         }
@@ -458,7 +458,7 @@ namespace VPET.Evian.Check_In
                     }
                 case 1: ///学习一次
                     {
-                        if (obj.work.Type == GraphHelper.Work.WorkType.Study)
+                        if (obj.work.Type == GraphHelper.Work.WorkType.Study && obj.spendtime >= 0.9 * obj.work.Time)
                         {
                             GiveBonus();
                         }
@@ -466,7 +466,7 @@ namespace VPET.Evian.Check_In
                     }
                 case 2: ///玩耍一次
                     {
-                        if (obj.work.Type == GraphHelper.Work.WorkType.Play)
+                        if (obj.work.Type == GraphHelper.Work.WorkType.Play && obj.spendtime >= 0.9 * obj.work.Time)
                         {
                             GiveBonus();
                         }
