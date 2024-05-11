@@ -240,6 +240,10 @@ namespace VPET.Evian.Check_In
             {
                 MTask[(gstr)("Task" + CheckType.ToString())] = CheckType.ToString();
             }
+            else if(IfFinished == true)
+            {
+                Content = "今日已签到".Translate();
+            }
             //ShowTask();
             ///base.LoadPlugin();
         }
