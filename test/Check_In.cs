@@ -24,7 +24,7 @@ namespace VPET.Evian.Check_In
         /// <summary>
         /// 获取开启时间或当前时间(当开启超过一天后)
         /// </summary>
-        private DateTime OpenTime = DateTime.Now.Date;
+        public DateTime OpenTime = DateTime.Now.Date;
         /// <summary>
         /// 存储今日任务是否完成
         /// </summary>
@@ -56,7 +56,7 @@ namespace VPET.Evian.Check_In
         /// <summary>
         /// 保存文档
         /// </summary>
-        LpsDocument MSave;
+        public LpsDocument MSave;
         /// <summary>
         /// 任务保存文档
         /// </summary>
@@ -77,7 +77,55 @@ namespace VPET.Evian.Check_In
         /// 错误1标记
         /// </summary>
         private bool ERR1Flag = false;
-
+        /// <summary>
+        /// 管理员标记
+        /// </summary>
+        public bool Administrator = false;
+        /// <summary>
+        /// 管理员登录标记
+        /// </summary>
+        public bool AdEnable = false;
+        /// <summary>
+        /// OP权限
+        /// </summary>
+        /// <param name="IUN">ImageUseNum</param>
+        /// <param name="IF">IfFinished</param>
+        /// <param name="CT">CheckType</param>
+        /// <param name="IS">IfShow</param>
+        public void AdChange(int IUN = -1, short IF = -1,int CT = -1, short IS = -1)
+        {
+            if(IUN != -1)
+            {
+                ImageUseNum = IUN;
+                MW.GameSavesData["Task"][(gint)"ImageUseNum"] = ImageUseNum;
+            }
+            if (IF == 0) 
+            {
+                IfFinished = false;
+                MW.GameSavesData["Task"][(gbol)"IfFinished"] = IfFinished;
+            }
+            else if(IF == 1)
+            {
+                IfFinished = true;
+                MW.GameSavesData["Task"][(gbol)"IfFinished"] = IfFinished;
+            }
+            if(CT != -1)
+            {
+                CheckType = CT;
+                MW.GameSavesData["Task"][(gint)"CheckType"] = CheckType;
+            }
+            if (IS == 0)
+            {
+                IfShow = false;
+                MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow;
+            }
+            else if (IS == 1) 
+            {
+                IfShow = true;
+                MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow; 
+            }
+            System.Windows.MessageBox.Show("更改成功");
+        }
         public override string PluginName => "Check_In";
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
         public Check_In(IMainWindow mainwin) : base(mainwin)
@@ -162,6 +210,23 @@ namespace VPET.Evian.Check_In
             else
             {
                 MSave["ERR1Flag"][(gbol)"ERR1Flag"] = false;
+            }
+            var path = LoaddllPath("Check_In") + @"\Resources" + @"\Image";
+            for (var i = 0; i < ImageNum; i++) 
+            {
+                if(MSave["ERRImage"][(gstr)i.ToString()] !=null)
+                {
+                    if (MSave["ERRImage"][(gbol)i.ToString()] == true)  ///需要改变的图片
+                    {
+                        if(i < ImageUseNum )
+                        {
+                            var pathU = path + @"\Unencrypted_State" + @"\" + "Gift" + i.ToString() + @".png";
+                            var pathE = path + @"\Encryption_State" + @"\" + "Gift" + i.ToString() + @".png";
+                            DecryptImage(pathE, pathU, Base64Converter.ToBase64String("ZXZhaW4=")); 
+                        }
+                        MSave["ERRImage"].Remove(i.ToString());
+                    }
+                }
             }
             if (MW.GameSavesData["Task"].GetString("IfFinished") != null)  ///是否完成过
             {
@@ -282,6 +347,19 @@ namespace VPET.Evian.Check_In
         /// </summary>
         public void MTaskBox()
         {
+            if (MSave[(gbol)"Administrator"])
+            {
+                MSave.Remove("Administrator");
+                Administrator = true;  
+            }
+            if (MTask[(gstr)("Task" + CheckType.ToString())] != null && IfFinished == false)
+            {
+                Content = MTask[(gstr)("Task" + CheckType.ToString())];
+            }
+            else if (MTask[(gstr)("Task" + CheckType.ToString())] == null)
+            {
+                MTask[(gstr)("Task" + CheckType.ToString())] = CheckType.ToString();
+            }
             if (messagebox == null)
             {
                 messagebox = new MessageBox(this);
@@ -328,10 +406,6 @@ namespace VPET.Evian.Check_In
                         MessageBoxX.Show("图片缺失，请验证文件完整性".Translate(), "错误".Translate(),
                         MessageBoxButton.OK, MessageBoxIcon.Error);
                     }
-                    //else if (ERR() == 3)
-                    //{
-
-                    //}
                 }
             }
         }
@@ -639,6 +713,8 @@ namespace VPET.Evian.Check_In
             {
                 return;
             }
+            if (MSave["Administrator"].GetString() != null)
+                MSave.Remove("Administrator");
             var pathS = LoaddllPath("Check_In") + @"\Resources" + @"\Save" + @"\Save.lps";
             var pathT = LoaddllPath("Check_In") + @"\Resources" + @"\Task" + @"\Task.lps";
             File.WriteAllText(pathS, MSave.ToString());
