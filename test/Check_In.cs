@@ -147,13 +147,13 @@ namespace VPET.Evian.Check_In
             {
                 MW.GameSavesData["Task"][(gint)"ImageUseNum"] = 0;
             }
-            if (MSave["IfShow"].GetString("IfShow") != null)  ///是否显示过
+            if (MW.GameSavesData["Task"].GetString("IfShow") != null)  ///是否显示过
             {
-                IfShow = MSave["IfShow"][(gbol)"IfShow"];
+                IfShow = MW.GameSavesData["Task"][(gbol)"IfShow"];
             }
             else
             {
-                MSave["IfShow"][(gbol)"IfShow"] = false;
+                MW.GameSavesData["Task"][(gbol)"IfShow"] = false;
             }
             if (MSave["ERR1Flag"].GetString("ERR1Flag") != null)  ///是否显示过ERR1
             {
@@ -171,56 +171,56 @@ namespace VPET.Evian.Check_In
             {
                 MW.GameSavesData["Task"][(gbol)"IfFinished"] = false;
             }
-            if (MSave["TBNum"].GetString("TBNum") != null)  ///摸身子次数
+            if (MW.GameSavesData["Task"].GetString("TBNum") != null)  ///摸身子次数
             {
-                TBNum = MSave["TBNum"][(gint)"TBNum"];
+                TBNum = MW.GameSavesData["Task"][(gint)"TBNum"];
             }
             else
             {
                 TBNum = MW.GameSavesData.Statistics[(gint)"stat_touch_body"];
-                MSave["TBNum"][(gint)"TBNum"] = MW.GameSavesData.Statistics[(gint)"stat_touch_body"];
+                MW.GameSavesData["Task"][(gint)"TBNum"] = MW.GameSavesData.Statistics[(gint)"stat_touch_body"];
             }
-            if (MSave["THNum"].GetString("THNum") != null)  ///摸头次数
+            if (MW.GameSavesData["Task"].GetString("THNum") != null)  ///摸头次数
             {
-                THNum = MSave["THNum"][(gint)"THNum"];
+                THNum = MW.GameSavesData["Task"][(gint)"THNum"];
             }
             else
             {
                 THNum = MW.GameSavesData.Statistics[(gint)"stat_touch_head"];
-                MSave["THNum"][(gint)"THNum"] = MW.GameSavesData.Statistics[(gint)"stat_touch_head"];
+                MW.GameSavesData["Task"][(gint)"THNum"] = MW.GameSavesData.Statistics[(gint)"stat_touch_head"];
             }
-            if (MSave["BuyNum"].GetString("BuyNum") != null)  ///购买次数
+            if (MW.GameSavesData["Task"].GetString("BuyNum") != null)  ///购买次数
             {
-                BuyNum = MSave["BuyNum"][(gint)"BuyNum"];
+                BuyNum = MW.GameSavesData["Task"][(gint)"BuyNum"];
             }
             else
             {
                 BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buytimes"]- MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
-                MSave["BuyNum"][(gint)"BuyNum"] = MW.GameSavesData.Statistics[(gint)"stat_buytimes"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
+                MW.GameSavesData["Task"][(gint)"BuyNum"] = MW.GameSavesData.Statistics[(gint)"stat_buytimes"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
             }
             ///确定今日任务
             ///0.工作一次   1.学习一次  2.玩耍一次  3.摸头三次  4.摸身子三次  5.手动购买一个商品
             DateTime store;
-            store = MSave["OpenTime"].GetDateTime();
+            store = MW.GameSavesData["Task"]["OpenTime"].GetDateTime();
             if (OpenTime.Date != store.Date)
             {
                 Random random = new Random(DateTime.Now.Millisecond);
                 CheckType = random.Next(6);
                 MW.GameSavesData["Task"][(gint)"CheckType"] = CheckType;
                 IfShow = false;
-                MSave["IfShow"][(gbol)"IfShow"] = IfShow;
+                MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow;
                 IfFinished = false;
                 MW.GameSavesData["Task"][(gbol)"IfFinished"] = IfFinished;
                 TBNum = MW.GameSavesData.Statistics[(gint)"stat_touch_body"];
-                MSave["TBNum"][(gint)"TBNum"] = TBNum;
+                MW.GameSavesData["Task"][(gint)"TBNum"] = TBNum;
                 THNum = MW.GameSavesData.Statistics[(gint)"stat_touch_head"];
-                MSave["THNum"][(gint)"THNum"] = THNum;
+                MW.GameSavesData["Task"][(gint)"THNum"] = THNum;
                 BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buytimes"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
-                MSave["BuyNum"][(gint)"BuyNum"] = BuyNum;
+                MW.GameSavesData["Task"][(gint)"BuyNum"] = BuyNum;
             }
-            if (MSave["OpenTime"].GetString() != null)    ///上次开启时间
+            if (MW.GameSavesData["Task"]["OpenTime"].GetString() != null)    ///上次开启时间
             {
-                MSave[(gdat)"OpenTime"] = OpenTime;
+                MW.GameSavesData["Task"][(gdat)"OpenTime"] = OpenTime;
             }
             ///判断任务类型，挂handle
             if (CheckType >= 0 && CheckType < 3)
@@ -378,15 +378,15 @@ namespace VPET.Evian.Check_In
                 }
                 OpenTime = DateTime.Now.Date;
                 IfShow = false;
-                MSave["IfShow"][(gbol)"IfShow"] = IfShow;
+                MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow;
                 IfFinished = false;
                 MW.GameSavesData["Task"][(gbol)"IfFinished"] = IfFinished;
                 TBNum = MW.GameSavesData.Statistics[(gint)"stat_touch_body"];
-                MSave["TBNum"][(gint)"TBNum"] = TBNum;
+                MW.GameSavesData["Task"][(gint)"TBNum"] = TBNum;
                 THNum = MW.GameSavesData.Statistics[(gint)"stat_touch_head"];
-                MSave["THNum"][(gint)"THNum"] = THNum;
+                MW.GameSavesData["Task"][(gint)"THNum"] = THNum;
                 BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buytimes"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
-                MSave["BuyNum"][(gint)"BuyNum"] = BuyNum;
+                MW.GameSavesData["Task"][(gint)"BuyNum"] = BuyNum;
                 ///确定今日任务
                 ///0.工作一次   1.学习一次  2.玩耍一次  3.摸头三次  4.摸身子三次  5.手动购买一个商品
                 Random random = new Random(DateTime.Now.Millisecond);
@@ -530,7 +530,7 @@ namespace VPET.Evian.Check_In
         public void ShowTask()
         {
             IfShow = true;
-            MSave["IfShow"][(gbol)"IfShow"] = IfShow;
+            MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow;
             MTaskBox();
         }
         /// <summary>
@@ -541,7 +541,7 @@ namespace VPET.Evian.Check_In
             IfFinished = true;
             MW.GameSavesData["Task"][(gbol)"IfFinished"] = IfFinished;
             IfShow = false;
-            MSave["IfShow"][(gbol)"IfShow"] = IfShow;
+            MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow;
             Random random = new Random(DateTime.Now.Millisecond);
             Random rand = new Random(DateTime.Now.Millisecond);
             ///随机奖励
