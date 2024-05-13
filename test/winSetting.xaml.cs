@@ -9,6 +9,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Panuon.WPF.UI;
 using System.Diagnostics;
 using System.Windows.Shapes;
+using LinePutScript;
 
 namespace VPET.Evian.Check_In
 {
@@ -45,12 +46,37 @@ namespace VPET.Evian.Check_In
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            var path = "";
-            path = vts.LoaddllPath("Check_In") + @"\Resources" + @"\Image";
-            var pathU = path + @"\Unencrypted_State";
-            if (Directory.Exists(pathU))
+            var path = vts.LoaddllPath("Check_In") + @"\Resources" + @"\Image";
+            for (var i = 0; i <= vts.ImageNum; i++)
             {
-                Process.Start("explorer.exe", pathU);
+                if (vts.MSave["ERRImage"][(gstr)i.ToString()] != null)
+                {
+                    if (vts.MSave["ERRImage"][(gbol)i.ToString()] == true)  ///需要改变的图片
+                    {
+                        if (i < vts.ImageUseNum)
+                        {
+                            var pathU = path + @"\Unencrypted_State" + @"\" + "Gift" + i.ToString() + @".png";
+                            var pathE = path + @"\Encryption_State" + @"\" + "Gift" + i.ToString() + @".png";
+                            Check_In.DecryptImage(pathE, pathU, Base64Converter.ToBase64String("ZXZhaW4="));
+                        }
+                        vts.MSave["ERRImage"].Remove(i.ToString());
+                    }
+                    else if (vts.MSave["ERRImage"][(gbol)i.ToString()] == false)
+                    {
+                        for (var j = 0; j < Math.Min(vts.ImageNum+1, i); j++)
+                        {
+                            var pathU = path + @"\Unencrypted_State" + @"\" + "Gift" + j.ToString() + @".png";
+                            var pathE = path + @"\Encryption_State" + @"\" + "Gift" + j.ToString() + @".png";
+                            Check_In.DecryptImage(pathE, pathU, Base64Converter.ToBase64String("ZXZhaW4="));
+                        }
+                        vts.MSave["ERRImage"].Remove(i.ToString());
+                    }
+                }
+            }
+            var pathUF = path + @"\Unencrypted_State";
+            if (Directory.Exists(pathUF))
+            {
+                Process.Start("explorer.exe", pathUF);
             }
         }
     }

@@ -36,7 +36,7 @@ namespace VPET.Evian.Check_In
         /// <summary>
         /// 图片个数
         /// </summary>
-        private int ImageNum = 0;
+        public int ImageNum = 0;
         /// <summary>
         /// 摸身子次数
         /// </summary>
@@ -52,7 +52,7 @@ namespace VPET.Evian.Check_In
         /// <summary>
         /// 使用过的个数
         /// </summary>
-        private int ImageUseNum = 0;
+        public int ImageUseNum = 0;
         /// <summary>
         /// 保存文档
         /// </summary>
@@ -210,23 +210,6 @@ namespace VPET.Evian.Check_In
             else
             {
                 MSave["ERR1Flag"][(gbol)"ERR1Flag"] = false;
-            }
-            var path = LoaddllPath("Check_In") + @"\Resources" + @"\Image";
-            for (var i = 0; i < ImageNum; i++) 
-            {
-                if(MSave["ERRImage"][(gstr)i.ToString()] !=null)
-                {
-                    if (MSave["ERRImage"][(gbol)i.ToString()] == true)  ///需要改变的图片
-                    {
-                        if(i < ImageUseNum )
-                        {
-                            var pathU = path + @"\Unencrypted_State" + @"\" + "Gift" + i.ToString() + @".png";
-                            var pathE = path + @"\Encryption_State" + @"\" + "Gift" + i.ToString() + @".png";
-                            DecryptImage(pathE, pathU, Base64Converter.ToBase64String("ZXZhaW4=")); 
-                        }
-                        MSave["ERRImage"].Remove(i.ToString());
-                    }
-                }
             }
             if (MW.GameSavesData["Task"].GetString("IfFinished") != null)  ///是否完成过
             {
