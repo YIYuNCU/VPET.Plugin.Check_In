@@ -63,7 +63,7 @@ namespace VPET.Evian.Check_In
                     }
                     else if (vts.MSave["ERRImage"][(gbol)i.ToString()] == false)
                     {
-                        for (var j = 0; j < Math.Min(vts.ImageNum+1, i); j++)
+                        for (var j = 0; j < Math.Min(vts.ImageUseNum, i + 1); j++) 
                         {
                             var pathU = path + @"\Unencrypted_State" + @"\" + "Gift" + j.ToString() + @".png";
                             var pathE = path + @"\Encryption_State" + @"\" + "Gift" + j.ToString() + @".png";
