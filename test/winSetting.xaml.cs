@@ -22,9 +22,9 @@ namespace VPET.Evian.Check_In
 
 
         public winSetting(Check_In vts)
-        {
+        {///前两行代码不可缺少
             InitializeComponent();
-            this.vts = vts;
+            this.vts = vts;   
             SwitchOn.IsChecked = vts.Set.Enable;
 
         }
@@ -33,7 +33,6 @@ namespace VPET.Evian.Check_In
         {
             vts.winSetting = null;
         }
-
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             if (vts.Set.Enable != SwitchOn.IsChecked.Value)

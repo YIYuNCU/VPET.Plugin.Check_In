@@ -23,7 +23,7 @@ namespace VPET.Evian.Check_In
         {
             InitializeComponent();
             this.vts = vts;
-            Content.Text = vts.Content.Translate().ToString();
+            Content.Text = vts.Content.ToString();
             if (vts.Administrator == true && vts.AdEnable == false)
             {
                 Enable.Visibility = Visibility.Visible;
@@ -49,6 +49,8 @@ namespace VPET.Evian.Check_In
                 AdClear.Visibility = Visibility.Visible;
                 AdExit.Visibility = Visibility.Visible;
                 Content.Visibility = Visibility.Collapsed;
+                Check_In_Num.Visibility = Visibility.Visible;
+                Check_In_NumText.Visibility = Visibility.Visible;
             }
             else
             {
@@ -63,6 +65,8 @@ namespace VPET.Evian.Check_In
                 AdSave.Visibility = Visibility.Collapsed;
                 AdClear.Visibility = Visibility.Collapsed;
                 AdExit.Visibility = Visibility.Collapsed;
+                Check_In_NumText.Visibility = Visibility.Collapsed;
+                Check_In_Num.Visibility= Visibility.Collapsed;
             }
         }
         private void Window_Closed(object sender, EventArgs e)
@@ -87,6 +91,8 @@ namespace VPET.Evian.Check_In
                 AdSave.Visibility = Visibility.Visible;
                 AdClear.Visibility = Visibility.Visible;
                 AdExit.Visibility= Visibility.Visible;
+                Check_In_Num.Visibility = Visibility.Visible;
+                Check_In_NumText.Visibility = Visibility.Visible;
             }
         }
 

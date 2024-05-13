@@ -6,20 +6,24 @@
         xmlns:ll="clr-namespace:LinePutScript.Localization.WPF;assembly=LinePutScript.Localization.WPF"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:VPET.Evian.Check_In"
         mc:Ignorable="d" xmlns:pu="clr-namespace:Panuon.WPF.UI;assembly=Panuon.WPF.UI" Title="{ll:Str 今日任务}"
-        FontSize="16" WindowState="Normal" SizeToContent="Height"
-        Background="{DynamicResource PrimaryLighter}" Closed="Window_Closed" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Height="200">
+        FontSize="16" WindowState="Normal"
+        Background="{DynamicResource PrimaryLighter}" Closed="Window_Closed" HorizontalAlignment="Center" 
+        VerticalAlignment="Center" Width="300" Height="200" MaxWidth="400" 
+        ScrollViewer.VerticalScrollBarVisibility="Disabled" SizeToContent="WidthAndHeight" AutomationProperties.Name="MBox">
     <Window.Resources>
         <ResourceDictionary Source="/VPet-Simulator.Windows.Interface;component/ResourceStyle.xaml" />
     </Window.Resources>
-
-    <Grid Background="{DynamicResource PrimaryLighter}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="280" Height="180">
+    <Grid Background="{DynamicResource PrimaryLighter}" Margin="20,20,20,20" Width="auto" Height="Auto" MinWidth="200" MaxWidth="350"  HorizontalAlignment="Left" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="280" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition MaxWidth="350" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="95.32" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock TextWrapping="Wrap" x:Name="Content" IsEnabled="False" Margin="15,15,15,-70" Text="" Visibility="Visible"/>
+        <TextBlock TextWrapping="Wrap" x:Name="Content" Visibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxWidth="300"/>
         <TextBox HorizontalAlignment="Left" x:Name="Enable" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="Enable_TextChanged" Visibility="Collapsed" />
         <TextBlock Margin="10,10,175,70" x:Name="ImageUseNumText" TextWrapping="Wrap" Text="ImageUseNum" RenderTransformOrigin="0.191,1.108" FontSize="12" Visibility="Collapsed"/>
         <TextBox Margin="110,0,110,60" x:Name="ImageUseNum" TextWrapping="Wrap" FontSize="12" Text="" Visibility="Collapsed"/>
@@ -32,5 +36,7 @@
         <Button Content="保存" x:Name="AdSave" HorizontalAlignment="Left" Margin="188,7,0,0" VerticalAlignment="Top" Click="AdSave_Click" Visibility="Collapsed"/>
         <Button Content="清空数据" x:Name="AdClear" HorizontalAlignment="Left" Margin="188,42,0,0" VerticalAlignment="Top" Click="AdClear_Click" Visibility="Collapsed"/>
         <Button Content="退出管理" x:Name="AdExit" Margin="188,80,18,-5" Click="AdExit_Click" Visibility="Collapsed"/>
+        <TextBlock x:Name="Check_In_NumText" Margin="185,110,0,-30" TextWrapping="Wrap" Text="Check_In_Num" RenderTransformOrigin="0.191,1.108" FontSize="12" Visibility="Collapsed"/>
+        <TextBox Margin="195,135,25,-75" x:Name="Check_In_Num" TextWrapping="Wrap" FontSize="12" Text="" Visibility="Collapsed"/>
     </Grid>
 </Window>
