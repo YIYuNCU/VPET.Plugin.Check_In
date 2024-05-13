@@ -116,16 +116,20 @@ namespace VPET.Evian.Check_In
             {
                 IfFinished = false;
                 MW.GameSavesData["Task"][(gbol)"IfFinished"] = IfFinished;
+                ChangeOpenState(1);
             }
             else if(IF == 1)
             {
                 IfFinished = true;
                 MW.GameSavesData["Task"][(gbol)"IfFinished"] = IfFinished;
+                ChangeOpenState(0);
             }
             if(CT != -1)
             {
                 CheckType = CT;
                 MW.GameSavesData["Task"][(gint)"CheckType"] = CheckType;
+                ChangeOpenState(0);
+                ChangeOpenState(1);
             }
             if (IS == 0)
             {
@@ -501,15 +505,15 @@ namespace VPET.Evian.Check_In
         /// <summary>
         /// 用于判断日期变化
         /// </summary>
-        private async void Datesta()
+        private void Datesta()
         {
             if (DateTime.Now.Date > OpenTime.Date)
             {
-                if (CheckType >= 0 && CheckType < 3 && IfFinished == false && Set.Enable == true) 
+                if (CheckType >= 0 && CheckType < 3 && IfFinished == false && Set.Enable == true)
                 {
                     MW.Main.WorkTimer.E_FinishWork -= Worksta;
                 }
-                else if (CheckType >= 3 && CheckType < 6 && IfFinished == false && Set.Enable == true) 
+                else if (CheckType >= 3 && CheckType < 6 && IfFinished == false && Set.Enable == true)
                 {
                     MW.Main.FunctionSpendHandle -= Buysta;
                 }
@@ -525,7 +529,7 @@ namespace VPET.Evian.Check_In
                 BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buytimes"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
                 MW.GameSavesData["Task"][(gint)"BuyNum"] = BuyNum;
                 ///确定今日任务
-                ///0.工作一次   1.学习一次  2.玩耍一次  3.摸头三次  4.摸身子三次  5.手动购买一个商品
+                ///0.工作一次   1.学习一次  2.玩耍一次  3.摸头三次  4.摸身子三次  5.手动购买一个商品 6.体力85  7.饱腹85  8.心情90  9.口渴85
                 Random random = new Random(DateTime.Now.Millisecond);
                 CheckType = random.Next(6);
                 MW.GameSavesData["Task"][(gint)"CheckType"] = CheckType;
@@ -541,7 +545,7 @@ namespace VPET.Evian.Check_In
                 {
                     Content = MTask[(gstr)("Task" + CheckType.ToString())].Translate();
                 }
-                else if (MTask[(gstr)("Task" + CheckType.ToString())] == null) 
+                else if (MTask[(gstr)("Task" + CheckType.ToString())] == null)
                 {
                     MTask[(gstr)("Task" + CheckType.ToString())] = CheckType.ToString();
                 }
@@ -559,6 +563,14 @@ namespace VPET.Evian.Check_In
             else if(change == 0)
             {
                 Set.Enable = false;
+                if (CheckType >= 0 && CheckType < 3)
+                {
+                    MW.Main.WorkTimer.E_FinishWork -= Worksta;
+                }
+                else if (CheckType >= 3 && CheckType < 6)
+                {
+                    MW.Main.FunctionSpendHandle -= Buysta;
+                }
             }
             else if(change == 1)
             {
