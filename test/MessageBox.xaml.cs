@@ -26,6 +26,7 @@ namespace VPET.Evian.Check_In
             Content.Text = vts.Content.ToString();
             if (vts.Administrator == true && vts.AdEnable == false)
             {
+                MBox.Title = "管理模式";
                 Enable.Visibility = Visibility.Visible;
                 Content.Visibility = Visibility.Collapsed;
                 vts.Administrator = false;
@@ -51,6 +52,7 @@ namespace VPET.Evian.Check_In
                 Content.Visibility = Visibility.Collapsed;
                 Check_In_Num.Visibility = Visibility.Visible;
                 Check_In_NumText.Visibility = Visibility.Visible;
+                MBox.Height = 280;
             }
             else
             {
@@ -71,6 +73,7 @@ namespace VPET.Evian.Check_In
         }
         private void Window_Closed(object sender, EventArgs e)
         {
+            vts.messagebox = null; 
             Close();
         }
 

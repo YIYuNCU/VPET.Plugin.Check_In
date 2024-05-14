@@ -294,6 +294,11 @@ namespace VPET.Evian.Check_In
             {
                 MW.GameSavesData["Task"][(gint)"Check_In_Number"] = Check_In_Number;
             }
+            if (MSave[(gbol)"Administrator"])
+            {
+                MSave.Remove("Administrator");
+                Administrator = true;
+            }
             ///确定今日任务
             ///0.工作一次   1.学习一次  2.玩耍一次  3.摸头三次  4.摸身子三次  5.手动购买一个商品
             DateTime store;
@@ -383,15 +388,12 @@ namespace VPET.Evian.Check_In
                 messagebox = new MessageBox(this);
             }
             else
-            { 
+            {
                 messagebox = null;
                 messagebox = new MessageBox(this);
             }
-            if (MSave[(gbol)"Administrator"])
+            if (Administrator == true)
             {
-                MSave.Remove("Administrator");
-                Administrator = true;
-                messagebox.Title = "管理模式";
                 messagebox.Show();
                 return;
             }
