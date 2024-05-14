@@ -24,7 +24,7 @@ namespace VPET.Evian.Check_In
         /// <summary>
         /// 获取开启时间或当前时间(当开启超过一天后)
         /// </summary>
-        private DateTime OpenTime = DateTime.Now.Date;
+        public DateTime OpenTime = DateTime.Now.Date;
         /// <summary>
         /// 存储今日任务是否完成
         /// </summary>
@@ -36,7 +36,7 @@ namespace VPET.Evian.Check_In
         /// <summary>
         /// 图片个数
         /// </summary>
-        private int ImageNum = 0;
+        public int ImageNum = 0;
         /// <summary>
         /// 摸身子次数
         /// </summary>
@@ -52,11 +52,15 @@ namespace VPET.Evian.Check_In
         /// <summary>
         /// 使用过的个数
         /// </summary>
-        private int ImageUseNum = 0;
+        public int ImageUseNum = 0;
+        /// <summary>
+        /// 签到天数
+        /// </summary>
+        private int Check_In_Number = 0;
         /// <summary>
         /// 保存文档
         /// </summary>
-        LpsDocument MSave;
+        public LpsDocument MSave;
         /// <summary>
         /// 任务保存文档
         /// </summary>
@@ -74,10 +78,76 @@ namespace VPET.Evian.Check_In
         /// </summary>
         private bool ERRFlag = false;
         /// <summary>
-        /// 错误1标记
+        /// 错误1标记(用完所有表情)
         /// </summary>
         private bool ERR1Flag = false;
-
+        /// <summary>
+        /// 管理员标记
+        /// </summary>
+        public bool Administrator = false;
+        /// <summary>
+        /// 管理员登录标记
+        /// </summary>
+        public bool AdEnable = false;
+        /// <summary>
+        /// 公告标记
+        /// </summary>
+        public bool Notice = false;
+        /// <summary>
+        /// 说明标记
+        /// </summary>
+        public bool Introduce = false;
+        /// <summary>
+        /// OP权限
+        /// </summary>
+        /// <param name="IUN">ImageUseNum</param>
+        /// <param name="IF">IfFinished</param>
+        /// <param name="CT">CheckType</param>
+        /// <param name="IS">IfShow</param>
+        /// <param name="CIN">Check_In_Number</param>
+        public void AdChange(int IUN = -1, short IF = -1,int CT = -1, short IS = -1,int CIN = -1)
+        {
+            if(IUN != -1)
+            {
+                ImageUseNum = IUN;
+                MW.GameSavesData["Task"][(gint)"ImageUseNum"] = ImageUseNum;
+            }
+            if (IF == 0) 
+            {
+                IfFinished = false;
+                MW.GameSavesData["Task"][(gbol)"IfFinished"] = IfFinished;
+                ChangeOpenState(1);
+            }
+            else if(IF == 1)
+            {
+                IfFinished = true;
+                MW.GameSavesData["Task"][(gbol)"IfFinished"] = IfFinished;
+                ChangeOpenState(0);
+            }
+            if(CT != -1)
+            {
+                CheckType = CT;
+                MW.GameSavesData["Task"][(gint)"CheckType"] = CheckType;
+                ChangeOpenState(0);
+                ChangeOpenState(1);
+            }
+            if (IS == 0)
+            {
+                IfShow = false;
+                MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow;
+            }
+            else if (IS == 1) 
+            {
+                IfShow = true;
+                MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow; 
+            }
+            if(CIN != -1)
+            {
+                Check_In_Number = CIN;
+                MW.GameSavesData["Task"][(gint)"Check_In_Number"] = Check_In_Number;
+            }
+            System.Windows.MessageBox.Show("更改成功");
+        }
         public override string PluginName => "Check_In";
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
         public Check_In(IMainWindow mainwin) : base(mainwin)
@@ -108,7 +178,16 @@ namespace VPET.Evian.Check_In
             ///读取游戏存档
             //////读取Setting文件
             Set = new Setting(MW.Set["Check_In"]);
-            Set.Enable = MW.Set["Check_In"].GetBool("Enable");
+            if(MW.Set["Check_In"].GetString("Enable")!= null)
+            {
+                Set.Enable = MW.Set["Check_In"].GetBool("Enable");
+            }
+            else
+            {
+                Set.Enable = true;
+                MW.Set["Check_In"][(gbol)"Enable"] = true;
+                Introduce = true;
+            }    
             //////读取Save文件
             if (LoaddllPath("Check_In") == "")
             {
@@ -131,13 +210,13 @@ namespace VPET.Evian.Check_In
                 MessageBoxX.Show("请确定图片个数是否为0".Translate(), "警告".Translate(),
                     MessageBoxButton.OK, MessageBoxIcon.Warning, DefaultButton.YesOK, 5);
             }
-            if (MSave["CheckType"].GetString("CheckType") != null)  ///任务类型
+            if (MW.GameSavesData["Task"].GetString("CheckType") != null)  ///任务类型
             {
-                CheckType = MSave["CheckType"][(gint)"CheckType"];
+                CheckType = MW.GameSavesData["Task"][(gint)"CheckType"];
             }
             else
             {
-                MSave["CheckType"][(gint)"CheckType"] = 0;
+                MW.GameSavesData["Task"][(gint)"CheckType"] = 0;
             }
             if (MW.GameSavesData["Task"].GetString("ImageUseNum") != null)  ///表情给予数量
             {
@@ -147,13 +226,13 @@ namespace VPET.Evian.Check_In
             {
                 MW.GameSavesData["Task"][(gint)"ImageUseNum"] = 0;
             }
-            if (MSave["IfShow"].GetString("IfShow") != null)  ///是否显示过
+            if (MW.GameSavesData["Task"].GetString("IfShow") != null)  ///是否显示过
             {
-                IfShow = MSave["IfShow"][(gbol)"IfShow"];
+                IfShow = MW.GameSavesData["Task"][(gbol)"IfShow"];
             }
             else
             {
-                MSave["IfShow"][(gbol)"IfShow"] = false;
+                MW.GameSavesData["Task"][(gbol)"IfShow"] = false;
             }
             if (MSave["ERR1Flag"].GetString("ERR1Flag") != null)  ///是否显示过ERR1
             {
@@ -163,6 +242,15 @@ namespace VPET.Evian.Check_In
             {
                 MSave["ERR1Flag"][(gbol)"ERR1Flag"] = false;
             }
+            if (MSave["Notice"].GetString("Notice") != null)  ///是否显示过Notice
+            {
+                Notice = MSave["Notice"][(gbol)"Notice"];
+            }
+            else
+            {
+                Notice = false;
+                MSave["Notice"][(gbol)"Notice"] = false;
+            }
             if (MW.GameSavesData["Task"].GetString("IfFinished") != null)  ///是否完成过
             {
                 IfFinished = MW.GameSavesData["Task"][(gbol)"IfFinished"];
@@ -171,56 +259,69 @@ namespace VPET.Evian.Check_In
             {
                 MW.GameSavesData["Task"][(gbol)"IfFinished"] = false;
             }
-            if (MSave["TBNum"].GetString("TBNum") != null)  ///摸身子次数
+            if (MW.GameSavesData["Task"].GetString("TBNum") != null)  ///摸身子次数
             {
-                TBNum = MSave["TBNum"][(gint)"TBNum"];
+                TBNum = MW.GameSavesData["Task"][(gint)"TBNum"];
             }
             else
             {
                 TBNum = MW.GameSavesData.Statistics[(gint)"stat_touch_body"];
-                MSave["TBNum"][(gint)"TBNum"] = MW.GameSavesData.Statistics[(gint)"stat_touch_body"];
+                MW.GameSavesData["Task"][(gint)"TBNum"] = MW.GameSavesData.Statistics[(gint)"stat_touch_body"];
             }
-            if (MSave["THNum"].GetString("THNum") != null)  ///摸头次数
+            if (MW.GameSavesData["Task"].GetString("THNum") != null)  ///摸头次数
             {
-                THNum = MSave["THNum"][(gint)"THNum"];
+                THNum = MW.GameSavesData["Task"][(gint)"THNum"];
             }
             else
             {
                 THNum = MW.GameSavesData.Statistics[(gint)"stat_touch_head"];
-                MSave["THNum"][(gint)"THNum"] = MW.GameSavesData.Statistics[(gint)"stat_touch_head"];
+                MW.GameSavesData["Task"][(gint)"THNum"] = MW.GameSavesData.Statistics[(gint)"stat_touch_head"];
             }
-            if (MSave["BuyNum"].GetString("BuyNum") != null)  ///购买次数
+            if (MW.GameSavesData["Task"].GetString("BuyNum") != null)  ///购买次数
             {
-                BuyNum = MSave["BuyNum"][(gint)"BuyNum"];
+                BuyNum = MW.GameSavesData["Task"][(gint)"BuyNum"];
             }
             else
             {
-                BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buy_times"]- MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
-                MSave["BuyNum"][(gint)"BuyNum"] = MW.GameSavesData.Statistics[(gint)"stat_buytimes"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
+                BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buytimes"]- MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
+                MW.GameSavesData["Task"][(gint)"BuyNum"] = MW.GameSavesData.Statistics[(gint)"stat_buytimes"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
+            }
+            if (MW.GameSavesData["Task"].GetString("Check_In_Number") != null)  ///签到天数
+            {
+                Check_In_Number = MW.GameSavesData["Task"][(gint)"Check_In_Number"];
+            }
+            else
+            {
+                MW.GameSavesData["Task"][(gint)"Check_In_Number"] = Check_In_Number;
+            }
+            if (MSave[(gbol)"Administrator"])
+            {
+                MSave.Remove("Administrator");
+                Administrator = true;
             }
             ///确定今日任务
             ///0.工作一次   1.学习一次  2.玩耍一次  3.摸头三次  4.摸身子三次  5.手动购买一个商品
             DateTime store;
-            store = MSave["OpenTime"].GetDateTime();
+            store = MW.GameSavesData["Task"]["OpenTime"].GetDateTime();
             if (OpenTime.Date != store.Date)
             {
                 Random random = new Random(DateTime.Now.Millisecond);
                 CheckType = random.Next(6);
-                MSave["CheckType"][(gint)"CheckType"] = CheckType;
+                MW.GameSavesData["Task"][(gint)"CheckType"] = CheckType;
                 IfShow = false;
-                MSave["IfShow"][(gbol)"IfShow"] = IfShow;
+                MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow;
                 IfFinished = false;
                 MW.GameSavesData["Task"][(gbol)"IfFinished"] = IfFinished;
                 TBNum = MW.GameSavesData.Statistics[(gint)"stat_touch_body"];
-                MSave["TBNum"][(gint)"TBNum"] = TBNum;
+                MW.GameSavesData["Task"][(gint)"TBNum"] = TBNum;
                 THNum = MW.GameSavesData.Statistics[(gint)"stat_touch_head"];
-                MSave["THNum"][(gint)"THNum"] = THNum;
-                BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buy_times"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
-                MSave["BuyNum"][(gint)"BuyNum"] = BuyNum;
+                MW.GameSavesData["Task"][(gint)"THNum"] = THNum;
+                BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buytimes"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
+                MW.GameSavesData["Task"][(gint)"BuyNum"] = BuyNum;
             }
-            if (MSave["OpenTime"].GetString() != null)    ///上次开启时间
+            if (MW.GameSavesData["Task"]["OpenTime"].GetString() != null)    ///上次开启时间
             {
-                MSave[(gdat)"OpenTime"] = OpenTime;
+                MW.GameSavesData["Task"][(gdat)"OpenTime"] = OpenTime;
             }
             ///判断任务类型，挂handle
             if (CheckType >= 0 && CheckType < 3)
@@ -234,11 +335,15 @@ namespace VPET.Evian.Check_In
             ///将任务输入Content变量
             if (MTask[(gstr)("Task" + CheckType.ToString())] != null && IfFinished == false)
             {
-                Content = MTask[(gstr)("Task" + CheckType.ToString())];
+                Content = MTask[(gstr)("Task" + CheckType.ToString())].Translate();
             }
             else if (MTask[(gstr)("Task" + CheckType.ToString())] == null)
             {
                 MTask[(gstr)("Task" + CheckType.ToString())] = CheckType.ToString();
+            }
+            else if(IfFinished == true)
+            {
+                Content = "今日已签到".Translate();
             }
             //ShowTask();
             ///base.LoadPlugin();
@@ -281,14 +386,38 @@ namespace VPET.Evian.Check_In
             if (messagebox == null)
             {
                 messagebox = new MessageBox(this);
-                messagebox.Show();
             }
             else
             {
-                messagebox = null ;
+                messagebox = null;
                 messagebox = new MessageBox(this);
-                messagebox.Show();
             }
+            if (Administrator == true)
+            {
+                messagebox.Show();
+                return;
+            }
+            if (MTask[(gstr)("Task" + CheckType.ToString())] != null && IfFinished == false && Notice == false && Introduce == false) 
+            {
+                Content = MTask[(gstr)("Task" + CheckType.ToString())].Translate();
+                messagebox.Title = "今日任务".Translate();
+            }
+            else if (IfFinished == true && Notice == false && Introduce == false)
+            {
+                Content = "今日已签到".Translate();
+            }
+            else if (Introduce == true)
+            {
+                messagebox.Title = "使用说明".Translate();
+                Introduce = false;
+            }
+            else if(Notice == true)
+            {
+                messagebox.Title = "通知".Translate();
+                Notice = false;
+            }
+            messagebox.Topmost = false;
+            messagebox.Show();        
         }
         /// <summary>
         /// UI显示函数
@@ -296,12 +425,16 @@ namespace VPET.Evian.Check_In
         /// <param name="main"></param>
         private void Check_In_UI(Main main)
         {
+            if(Introduce == true)
+            {
+                if (MTask.GetString("Introduce") != null)
+                {
+                    Content = MTask[(gstr)"Introduce"].Translate();
+                    MTaskBox();
+                }
+            }
             if (Set.Enable)
             {
-                if(IfShow == false)
-                {
-                    ShowTask();
-                }
                 if (ERR() != 0 && ERRFlag == false) 
                 {
                     ERRFlag = true;
@@ -324,10 +457,24 @@ namespace VPET.Evian.Check_In
                         MessageBoxX.Show("图片缺失，请验证文件完整性".Translate(), "错误".Translate(),
                         MessageBoxButton.OK, MessageBoxIcon.Error);
                     }
-                    //else if (ERR() == 3)
-                    //{
-
-                    //}
+                }
+                else if (Notice == true)
+                {
+                    if (MTask.GetString("Notice") != null)
+                    {
+                        Content = MTask[(gstr)"Notice"].Translate();
+                        MSave["Notice"][(gbol)"Notice"] = false;
+                        MTaskBox();
+                    }
+                    else
+                    {
+                        Notice = false;
+                        MSave["Notice"][(gbol)"Notice"] = false;
+                    }
+                }
+                else if (IfShow == false)
+                {
+                    ShowTask();
                 }
             }
         }
@@ -360,34 +507,34 @@ namespace VPET.Evian.Check_In
         /// <summary>
         /// 用于判断日期变化
         /// </summary>
-        private async void Datesta()
+        private void Datesta()
         {
             if (DateTime.Now.Date > OpenTime.Date)
             {
-                if (CheckType >= 0 && CheckType < 3 && IfFinished == false && Set.Enable == true) 
+                if (CheckType >= 0 && CheckType < 3 && IfFinished == false && Set.Enable == true)
                 {
                     MW.Main.WorkTimer.E_FinishWork -= Worksta;
                 }
-                else if (CheckType >= 3 && CheckType < 6 && IfFinished == false && Set.Enable == true) 
+                else if (CheckType >= 3 && CheckType < 6 && IfFinished == false && Set.Enable == true)
                 {
                     MW.Main.FunctionSpendHandle -= Buysta;
                 }
                 OpenTime = DateTime.Now.Date;
                 IfShow = false;
-                MSave["IfShow"][(gbol)"IfShow"] = IfShow;
+                MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow;
                 IfFinished = false;
                 MW.GameSavesData["Task"][(gbol)"IfFinished"] = IfFinished;
                 TBNum = MW.GameSavesData.Statistics[(gint)"stat_touch_body"];
-                MSave["TBNum"][(gint)"TBNum"] = TBNum;
+                MW.GameSavesData["Task"][(gint)"TBNum"] = TBNum;
                 THNum = MW.GameSavesData.Statistics[(gint)"stat_touch_head"];
-                MSave["THNum"][(gint)"THNum"] = THNum;
+                MW.GameSavesData["Task"][(gint)"THNum"] = THNum;
                 BuyNum = MW.GameSavesData.Statistics[(gint)"stat_buytimes"] - MW.GameSavesData.Statistics[(gint)"stat_autobuy"];
-                MSave["BuyNum"][(gint)"BuyNum"] = BuyNum;
+                MW.GameSavesData["Task"][(gint)"BuyNum"] = BuyNum;
                 ///确定今日任务
-                ///0.工作一次   1.学习一次  2.玩耍一次  3.摸头三次  4.摸身子三次  5.手动购买一个商品
+                ///0.工作一次   1.学习一次  2.玩耍一次  3.摸头三次  4.摸身子三次  5.手动购买一个商品 6.体力85  7.饱腹85  8.心情90  9.口渴85
                 Random random = new Random(DateTime.Now.Millisecond);
                 CheckType = random.Next(6);
-                MSave["CheckType"][(gint)"CheckType"] = CheckType;
+                MW.GameSavesData["Task"][(gint)"CheckType"] = CheckType;
                 if (CheckType >= 0 && CheckType < 3)
                 {
                     MW.Main.WorkTimer.E_FinishWork += Worksta;
@@ -398,9 +545,9 @@ namespace VPET.Evian.Check_In
                 }
                 if (MTask[(gstr)("Task" + CheckType.ToString())] != null && IfFinished == false)
                 {
-                    Content = MTask[(gstr)("Task" + CheckType.ToString())];
+                    Content = MTask[(gstr)("Task" + CheckType.ToString())].Translate();
                 }
-                else if (MTask[(gstr)("Task" + CheckType.ToString())] == null) 
+                else if (MTask[(gstr)("Task" + CheckType.ToString())] == null)
                 {
                     MTask[(gstr)("Task" + CheckType.ToString())] = CheckType.ToString();
                 }
@@ -418,6 +565,14 @@ namespace VPET.Evian.Check_In
             else if(change == 0)
             {
                 Set.Enable = false;
+                if (CheckType >= 0 && CheckType < 3)
+                {
+                    MW.Main.WorkTimer.E_FinishWork -= Worksta;
+                }
+                else if (CheckType >= 3 && CheckType < 6)
+                {
+                    MW.Main.FunctionSpendHandle -= Buysta;
+                }
             }
             else if(change == 1)
             {
@@ -450,7 +605,7 @@ namespace VPET.Evian.Check_In
             {
                 case 0: ///工作一次
                     {
-                        if (obj.work.Type == GraphHelper.Work.WorkType.Work)
+                        if (obj.work.Type == GraphHelper.Work.WorkType.Work && obj.spendtime >= 0.9 * obj.work.Time)
                         {
                             GiveBonus();
                         }
@@ -458,7 +613,7 @@ namespace VPET.Evian.Check_In
                     }
                 case 1: ///学习一次
                     {
-                        if (obj.work.Type == GraphHelper.Work.WorkType.Study)
+                        if (obj.work.Type == GraphHelper.Work.WorkType.Study && obj.spendtime >= 0.9 * obj.work.Time)
                         {
                             GiveBonus();
                         }
@@ -466,7 +621,7 @@ namespace VPET.Evian.Check_In
                     }
                 case 2: ///玩耍一次
                     {
-                        if (obj.work.Type == GraphHelper.Work.WorkType.Play)
+                        if (obj.work.Type == GraphHelper.Work.WorkType.Play && obj.spendtime >= 0.9 * obj.work.Time)
                         {
                             GiveBonus();
                         }
@@ -526,7 +681,7 @@ namespace VPET.Evian.Check_In
         public void ShowTask()
         {
             IfShow = true;
-            MSave["IfShow"][(gbol)"IfShow"] = IfShow;
+            MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow;
             MTaskBox();
         }
         /// <summary>
@@ -537,13 +692,36 @@ namespace VPET.Evian.Check_In
             IfFinished = true;
             MW.GameSavesData["Task"][(gbol)"IfFinished"] = IfFinished;
             IfShow = false;
-            MSave["IfShow"][(gbol)"IfShow"] = IfShow;
+            MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow;
+            //Check_In_Number++;
+            //MW.GameSavesData["Task"][(gint)"Check_In_Number"] = Check_In_Number;
             Random random = new Random(DateTime.Now.Millisecond);
             Random rand = new Random(DateTime.Now.Millisecond);
             ///随机奖励
-            var BonusType = random.Next(5);
+            var randnum = random.Next(99);
+            var BonusType = -1;
+            if (randnum >= 0 && randnum < 40) 
+            {
+                BonusType = 0;
+            }
+            else if(randnum >= 40 && randnum <80)
+            {
+                BonusType = 1;
+            }
+            else if(randnum >= 80 && randnum < 90)
+            {
+                BonusType = 4;
+            }
+            else if(randnum >=90 && randnum < 95)
+            {
+                BonusType= 2;
+            }
+            else if (randnum >= 95 && randnum < 99)
+            {
+                BonusType = 3;
+            }
             ///如果等级高于900就考虑经验，避免溢出
-            if(MW.GameSavesData.GameSave.Level > 900)
+            if (MW.GameSavesData.GameSave.Level > 900)
             {
                 if(BonusType == 0|| BonusType == 2)
                 {
@@ -556,21 +734,21 @@ namespace VPET.Evian.Check_In
             var gain_actual = Math.Max(Math.Max(gain * 0.75, rand.Next(Convert.ToInt32(gain))), 200);
                 if (BonusType == 0 || BonusType == 2) 
                 {
-                    Content = MTask[(gstr)("Bonus" + 0.ToString())] + gain_actual.ToString("0.00");
+                    Content = MTask[(gstr)("Bonus" + 0.ToString())].Translate() + gain_actual.ToString("0.00");
                 }
                 else if (BonusType == 1 || BonusType == 3) 
                 {
-                    Content = MTask[(gstr)("Bonus" + 1.ToString())] + (gain_actual/10).ToString("0.00");
+                    Content = MTask[(gstr)("Bonus" + 1.ToString())].Translate() + (gain_actual/10).ToString("0.00");
                 }
                 else if(BonusType == 4)
                 {
-                    Content = MTask[(gstr)("Bonus" + 3.ToString())];
+                    Content = MTask[(gstr)("Bonus" + 3.ToString())].Translate();
                     MW.GameSavesData["Task"][(gint)"ImageUseNum"] ++;
 
                 }
                 if (BonusType == 2 || BonusType == 3) 
                 {
-                    Content += MTask[(gstr)("Bonus" + 2.ToString())];
+                    Content += MTask[(gstr)("Bonus" + 2.ToString())].Translate();
                     MW.GameSavesData["Task"][(gint)"ImageUseNum"] ++;
                 }
 
@@ -635,6 +813,8 @@ namespace VPET.Evian.Check_In
             {
                 return;
             }
+            if (MSave["Administrator"].GetString() != null)
+                MSave.Remove("Administrator");
             var pathS = LoaddllPath("Check_In") + @"\Resources" + @"\Save" + @"\Save.lps";
             var pathT = LoaddllPath("Check_In") + @"\Resources" + @"\Task" + @"\Task.lps";
             File.WriteAllText(pathS, MSave.ToString());
