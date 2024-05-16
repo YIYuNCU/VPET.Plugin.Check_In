@@ -511,6 +511,8 @@ namespace VPET.Evian.Check_In
         {
             if (DateTime.Now.Date > OpenTime.Date)
             {
+                OpenTime = DateTime.Now.Date;
+                MW.GameSavesData["Task"][(gdat)"OpenTime"] = DateTime.Now.Date;
                 if (CheckType >= 0 && CheckType < 3 && IfFinished == false && Set.Enable == true)
                 {
                     MW.Main.WorkTimer.E_FinishWork -= Worksta;
@@ -519,7 +521,6 @@ namespace VPET.Evian.Check_In
                 {
                     MW.Main.FunctionSpendHandle -= Buysta;
                 }
-                OpenTime = DateTime.Now.Date;
                 IfShow = false;
                 MW.GameSavesData["Task"][(gbol)"IfShow"] = IfShow;
                 IfFinished = false;
