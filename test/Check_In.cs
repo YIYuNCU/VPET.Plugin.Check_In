@@ -606,7 +606,7 @@ namespace VPET.Evian.Check_In
             {
                 case 0: ///工作一次
                     {
-                        if (obj.work.Type == GraphHelper.Work.WorkType.Work && obj.spendtime >= 0.9 * obj.work.Time)
+                        if (obj.work.Type == GraphHelper.Work.WorkType.Work && obj.spendtime >= Math.Min(0.9 * obj.work.Time,30))
                         {
                             GiveBonus();
                         }
@@ -614,7 +614,7 @@ namespace VPET.Evian.Check_In
                     }
                 case 1: ///学习一次
                     {
-                        if (obj.work.Type == GraphHelper.Work.WorkType.Study && obj.spendtime >= 0.9 * obj.work.Time)
+                        if (obj.work.Type == GraphHelper.Work.WorkType.Study && obj.spendtime >= Math.Min(0.9 * obj.work.Time, 30))
                         {
                             GiveBonus();
                         }
@@ -622,7 +622,7 @@ namespace VPET.Evian.Check_In
                     }
                 case 2: ///玩耍一次
                     {
-                        if (obj.work.Type == GraphHelper.Work.WorkType.Play && obj.spendtime >= 0.9 * obj.work.Time)
+                        if (obj.work.Type == GraphHelper.Work.WorkType.Play && obj.spendtime >= Math.Min(0.9 * obj.work.Time,30))
                         {
                             GiveBonus();
                         }
