@@ -92,7 +92,7 @@ namespace VPET.Evian.Check_In
         /// <summary>
         /// 公告标记
         /// </summary>
-        public bool Notice = false;
+        public int Notice = 0;
         /// <summary>
         /// 说明标记
         /// </summary>
@@ -244,12 +244,12 @@ namespace VPET.Evian.Check_In
             }
             if (MSave["Notice"].GetString("Notice") != null)  ///是否显示过Notice
             {
-                Notice = MSave["Notice"][(gbol)"Notice"];
+                Notice = MSave["Notice"][(gint)"Notice"];
             }
             else
             {
-                Notice = false;
-                MSave["Notice"][(gbol)"Notice"] = false;
+                Notice = 0;
+                MSave["Notice"][(gint)"Notice"] = 0;
             }
             if (MW.GameSavesData["Task"].GetString("IfFinished") != null)  ///是否完成过
             {
@@ -397,12 +397,12 @@ namespace VPET.Evian.Check_In
                 messagebox.Show();
                 return;
             }
-            if (MTask[(gstr)("Task" + CheckType.ToString())] != null && IfFinished == false && Notice == false && Introduce == false) 
+            if (MTask[(gstr)("Task" + CheckType.ToString())] != null && IfFinished == false && Notice != 1 && Introduce == false) 
             {
                 Content = MTask[(gstr)("Task" + CheckType.ToString())].Translate();
                 messagebox.Title = "今日任务".Translate();
             }
-            else if (IfFinished == true && Notice == false && Introduce == false)
+            else if (IfFinished == true && Notice != 1 && Introduce == false)
             {
                 Content = "今日已签到".Translate();
             }
@@ -411,10 +411,10 @@ namespace VPET.Evian.Check_In
                 messagebox.Title = "使用说明".Translate();
                 Introduce = false;
             }
-            else if(Notice == true)
+            else if(Notice == 1)
             {
                 messagebox.Title = "通知".Translate();
-                Notice = false;
+                Notice = -1;
             }
             messagebox.Topmost = false;
             messagebox.Show();        
@@ -458,18 +458,16 @@ namespace VPET.Evian.Check_In
                         MessageBoxButton.OK, MessageBoxIcon.Error);
                     }
                 }
-                else if (Notice == true)
+                else if (Notice == 1)
                 {
                     if (MTask.GetString("Notice") != null)
                     {
                         Content = MTask[(gstr)"Notice"].Translate();
-                        MSave["Notice"][(gbol)"Notice"] = false;
                         MTaskBox();
                     }
                     else
                     {
-                        Notice = false;
-                        MSave["Notice"][(gbol)"Notice"] = false;
+                        Notice = -1;
                     }
                 }
                 else if (IfShow == false)
@@ -818,6 +816,22 @@ namespace VPET.Evian.Check_In
                 MSave.Remove("Administrator");
             var pathS = LoaddllPath("Check_In") + @"\Resources" + @"\Save" + @"\Save.lps";
             var pathT = LoaddllPath("Check_In") + @"\Resources" + @"\Task" + @"\Task.lps";
+            LpsDocument MSaveEnd = new LpsDocument(File.ReadAllText(pathS));
+            if (Notice == 0)
+            {
+                if(MSaveEnd["Notice"][(gint)"Notice"] != 0)
+                {
+                    MSave["Notice"][(gint)"Notice"] = MSaveEnd["Notice"][(gint)"Notice"];
+                }
+                else
+                {
+                    MSave["Notice"][(gint)"Notice"] = 0;
+                }
+            }
+            else
+            {
+                MSave["Notice"][(gint)"Notice"] = 0;
+            }
             File.WriteAllText(pathS, MSave.ToString());
             File.WriteAllText(pathT, MTask.ToString());
             base.Save();
