@@ -806,6 +806,36 @@ namespace VPET.Evian.Check_In
             ImageUseNum = MW.GameSavesData["Task"][(gint)"ImageUseNum"];
             Process.Start("explorer.exe",pathU);
         }
+        public override void Save()
+        {
+            if (ERR() != 0 && ERR() != 3 && ERR() != 1)
+            {
+                return;
+            }
+            if (MSave["Administrator"].GetString() != null)
+                MSave.Remove("Administrator");
+            var pathS = LoaddllPath("Check_In") + @"\Resources" + @"\Save" + @"\Save.lps";
+            var pathT = LoaddllPath("Check_In") + @"\Resources" + @"\Task" + @"\Task.lps";
+            LpsDocument MSaveEnd = new LpsDocument(File.ReadAllText(pathS));
+            if (Notice == 0)
+            {
+                if (MSaveEnd["Notice"][(gint)"Notice"] != 0)
+                {
+                    MSave["Notice"][(gint)"Notice"] = MSaveEnd["Notice"][(gint)"Notice"];
+                }
+                else
+                {
+                    MSave["Notice"][(gint)"Notice"] = 0;
+                }
+            }
+            else
+            {
+                MSave["Notice"][(gint)"Notice"] = 0;
+            }
+            File.WriteAllText(pathS, MSave.ToString());
+            File.WriteAllText(pathT, MTask.ToString());
+            base.Save();
+        }
         public override void EndGame()
         {
             if (ERR() != 0 && ERR() != 3 && ERR() != 1)   
