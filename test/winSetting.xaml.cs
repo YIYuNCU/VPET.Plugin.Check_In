@@ -10,6 +10,7 @@ using Panuon.WPF.UI;
 using System.Diagnostics;
 using System.Windows.Shapes;
 using LinePutScript;
+using System.Windows.Controls;
 
 namespace VPET.Evian.Check_In
 {
@@ -26,8 +27,7 @@ namespace VPET.Evian.Check_In
             InitializeComponent();
             this.vts = vts;   
             SwitchOn.IsChecked = vts.Set.Enable;
-
-        }
+;        }
 
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -45,30 +45,30 @@ namespace VPET.Evian.Check_In
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            var path = vts.LoaddllPath("Check_In") + @"\Resources" + @"\Image";
+            var path = System.IO.Path.Combine(vts.LoaddllPath("Check_In") , "Resources" , "Image");
             for (var i = 0; i <= vts.ImageNum; i++)
             {
-                if (vts.MSave["ERRImage"][(gstr)i.ToString()] != null)
+                if (!string.IsNullOrEmpty(vts.PSave["ERRImage"][(gstr)i.ToString()]))
                 {
-                    if (vts.MSave["ERRImage"][(gbol)i.ToString()] == true)  ///需要改变的图片
+                    if (vts.PSave["ERRImage"][(gbol)i.ToString()] == true)  ///需要改变的图片
                     {
                         if (i < vts.ImageUseNum)
                         {
-                            var pathU = path + @"\Unencrypted_State" + @"\" + "Gift" + i.ToString() + @".png";
-                            var pathE = path + @"\Encryption_State" + @"\" + "Gift" + i.ToString() + @".png";
+                            var pathU = System.IO.Path.Combine(path, "Unencrypted_State", "Gift" + i.ToString() + @".png");
+                            var pathE = System.IO.Path.Combine(path, "Encryption_State", "Gift" + i.ToString() + @".png");
                             Check_In.DecryptImage(pathE, pathU, Base64Converter.ToBase64String("ZXZhaW4="));
                         }
-                        vts.MSave["ERRImage"].Remove(i.ToString());
+                        vts.PSave["ERRImage"].Remove(i.ToString());
                     }
-                    else if (vts.MSave["ERRImage"][(gbol)i.ToString()] == false)
+                    else if (vts.PSave["ERRImage"][(gbol)i.ToString()] == false)
                     {
                         for (var j = 0; j < Math.Min(vts.ImageUseNum, i + 1); j++) 
                         {
-                            var pathU = path + @"\Unencrypted_State" + @"\" + "Gift" + j.ToString() + @".png";
-                            var pathE = path + @"\Encryption_State" + @"\" + "Gift" + j.ToString() + @".png";
+                            var pathU = System.IO.Path.Combine(path, "Unencrypted_State", "Gift" + j.ToString() + @".png");
+                            var pathE = System.IO.Path.Combine(path , "Encryption_State" ,  "Gift" + j.ToString() + @".png");
                             Check_In.DecryptImage(pathE, pathU, Base64Converter.ToBase64String("ZXZhaW4="));
                         }
-                        vts.MSave["ERRImage"].Remove(i.ToString());
+                        vts.PSave["ERRImage"].Remove(i.ToString());
                     }
                 }
             }
@@ -77,6 +77,13 @@ namespace VPET.Evian.Check_In
             {
                 Process.Start("explorer.exe", pathUF);
             }
+        }
+
+        private void ReSave_Click(object sender, RoutedEventArgs e)
+        {
+            vts.Resave();
+            MessageBoxX.Show("已读取存档备份".Translate(), "提示".Translate(),
+                    MessageBoxButton.OK, MessageBoxIcon.Info, DefaultButton.YesOK, 5);
         }
     }
 }

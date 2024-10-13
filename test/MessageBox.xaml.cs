@@ -16,20 +16,26 @@ namespace VPET.Evian.Check_In
     /// </summary>
     public partial class MessageBox : Window
     {
-        Check_In vts;
+        public MessageBoxCS vts;
 
 
-        public MessageBox(Check_In vts)
+        public MessageBox(MessageBoxCS vts)
         {
             InitializeComponent();
+            if (vts == null)
+            {
+                throw new ArgumentNullException(nameof(vts), "Parameter vts cannot be null.");
+            }
             this.vts = vts;
             Content.Text = vts.Content.ToString();
+            Title = vts.Title;
             if (vts.Administrator == true && vts.AdEnable == false)
             {
                 MBox.Title = "管理模式";
                 Enable.Visibility = Visibility.Visible;
                 Content.Visibility = Visibility.Collapsed;
                 vts.Administrator = false;
+                vts.vts.Administrator = false;
             }
             else if(vts.Administrator == false)
             {
@@ -38,6 +44,7 @@ namespace VPET.Evian.Check_In
             }
             if (vts.AdEnable == true)
             {
+                MBox.Title = "管理模式";
                 ImageUseNum.Visibility = Visibility.Visible;
                 ImageUseNumText.Visibility = Visibility.Visible;
                 IsFinished.Visibility = Visibility.Visible;
@@ -73,13 +80,12 @@ namespace VPET.Evian.Check_In
         }
         private void Window_Closed(object sender, EventArgs e)
         {
-            vts.messagebox = null; 
             Close();
         }
 
         private void Enable_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            if(Enable.Text.ToString() == "Check_In_Evian".ToString())
+            if(Enable.Text.ToString() == vts.Password.ToString())
             {
                 vts.AdEnable = true;
                 ImageUseNum.Visibility = Visibility.Visible;
@@ -103,39 +109,41 @@ namespace VPET.Evian.Check_In
         {
             if(ImageUseNum.Text != "")
             {
-                vts.AdChange(Convert.ToInt32(ImageUseNum.Text.ToString()));
+                vts.vts.AdChange(Convert.ToInt32(ImageUseNum.Text.ToString()));
             }
             if (IsFinished.Text != "")
             {
                 if(IsFinished.Text.ToString() == 0.ToString())
-                    vts.AdChange(-1, 0);
+                    vts.vts.AdChange(-1, 0);
                 else if (IsFinished.Text.ToString() == 1.ToString())
-                    vts.AdChange(-1, 1);
+                    vts.vts.AdChange(-1, 1);
             }
             if (CheckType.Text != "")
             {
-                vts.AdChange(-1,-1, Convert.ToInt32(CheckType.Text.ToString()));
+                vts.vts.AdChange(-1,-1, Convert.ToInt32(CheckType.Text.ToString()));
             }
             if (IfShow.Text != "")
             {
                 if (IfShow.Text.ToString() == 0.ToString())
-                    vts.AdChange(-1, -1,-1,0);
+                    vts.vts.AdChange(-1, -1,-1,0);
                 else if (IfShow.Text.ToString() == 1.ToString())
-                    vts.AdChange(-1, -1,-1,1);
+                    vts.vts.AdChange(-1, -1,-1,1);
                 
             }
         }
 
         private void AdClear_Click(object sender, RoutedEventArgs e)
         {
-            vts.OpenTime =DateTime.Now.AddDays(-1).Date;
+            vts.vts.OpenTime =DateTime.Now.AddDays(-1).Date;
             System.Windows.MessageBox.Show("移除数据成功");
         }
 
         private void AdExit_Click(object sender, RoutedEventArgs e)
         {
             vts.Administrator = false;
+            vts.vts.Administrator = false;
             vts.AdEnable = false;
+            vts.vts.AdEnable = false;
             System.Windows.MessageBox.Show("退出成功");
             Close();
         }
